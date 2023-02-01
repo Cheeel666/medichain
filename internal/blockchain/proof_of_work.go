@@ -1,7 +1,6 @@
-package pow
+package blockchain
 
 import (
-	"8sem/diploma/medichain/internal/blockchain"
 	"8sem/diploma/medichain/internal/utils"
 	"bytes"
 	"crypto/sha256"
@@ -18,12 +17,12 @@ const targetBits = 24
 
 // ProofOfWork represents a proof-of-work
 type ProofOfWork struct {
-	block  *blockchain.Block
+	block  *Block
 	target *big.Int
 }
 
 // NewProofOfWork builds and returns a ProofOfWork
-func NewProofOfWork(b *blockchain.Block) *ProofOfWork {
+func NewProofOfWork(b *Block) *ProofOfWork {
 	target := big.NewInt(1)
 	target.Lsh(target, uint(256-targetBits))
 
@@ -72,7 +71,7 @@ func (pow *ProofOfWork) Run() (int, []byte) {
 	return nonce, hash[:]
 }
 
-// Validate validates block's PoW
+// Validate block
 func (pow *ProofOfWork) Validate() bool {
 	var hashInt big.Int
 
