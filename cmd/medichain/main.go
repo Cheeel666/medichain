@@ -12,7 +12,6 @@ import (
 const configPath = "config/config.json"
 
 func main() {
-
 	cfg, err := config.InitConfig(configPath)
 	if err != nil {
 		fmt.Println(err)

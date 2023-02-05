@@ -13,5 +13,5 @@ type Server struct {
 }
 
 func NewServer() *Server {
-	repos :=
+	return nil
 }
