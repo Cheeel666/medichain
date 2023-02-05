@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"crypto/sha256"
 	"fmt"
+	"github.com/rs/zerolog/log"
 	"math"
 	"math/big"
 )
@@ -13,7 +14,7 @@ var (
 	maxNonce = math.MaxInt64
 )
 
-const targetBits = 24
+const targetBits = 2
 
 // ProofOfWork represents a proof-of-work
 type ProofOfWork struct {
@@ -52,7 +53,7 @@ func (pow *ProofOfWork) Run() (int, []byte) {
 	var hash [32]byte
 	nonce := 0
 
-	fmt.Printf("Mining the block containing \"%s\"\n", pow.block.Data)
+	log.Info().Msg(fmt.Sprintf("Mining the block containing %s", pow.block.Data))
 	for nonce < maxNonce {
 		data := pow.prepareData(nonce)
 

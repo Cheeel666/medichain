@@ -2,6 +2,7 @@ package blockchain
 
 import (
 	"fmt"
+	"github.com/rs/zerolog/log"
 	"strconv"
 )
 
@@ -24,11 +25,10 @@ func NewBlockchain() *Blockchain {
 
 func (bc *Blockchain) ValidateBlocks() {
 	for _, block := range bc.blocks {
-		fmt.Printf("Prev. hash: %x\n", block.PrevBlockHash)
-		fmt.Printf("Data: %s\n", block.Data)
-		fmt.Printf("Hash: %x\n", block.Hash)
+		log.Info().Msg(fmt.Sprintf("Prev. hash: %x\n", block.PrevBlockHash))
+		log.Info().Msg(fmt.Sprintf("Data: %s\n", block.Data))
+		log.Info().Msg(fmt.Sprintf("Hash: %x\n", block.Hash))
 		pow := NewProofOfWork(block)
-		fmt.Printf("PoW: %s\n", strconv.FormatBool(pow.Validate()))
-		fmt.Println()
+		log.Info().Msg(fmt.Sprintf("PoW: %s\n", strconv.FormatBool(pow.Validate())))
 	}
 }
