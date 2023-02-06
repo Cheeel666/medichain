@@ -6,8 +6,9 @@ import (
 )
 
 type Config struct {
-	DBHost   string `json:"db_host"`
-	LogLevel string `json:"log_level"`
+	DBHost           string `json:"db_host"`
+	LogLevel         string `json:"log_level"`
+	DiscoveryAddress string `json:"discovery_address"`
 }
 
 func InitConfig(path string) (*Config, error) {
