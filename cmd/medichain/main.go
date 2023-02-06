@@ -1,9 +1,10 @@
 package main
 
 import (
-	"8sem/diploma/medichain/config"
-	"8sem/diploma/medichain/internal/blockchain"
 	"fmt"
+	"medichain/config"
+	"medichain/internal/blockchain"
+
 	"github.com/rs/zerolog"
 
 	"os"
@@ -32,6 +33,10 @@ func main() {
 	zerolog.CallerMarshalFunc = func(pc uintptr, file string, line int) string {
 		return fmt.Sprintf(" %s:%d ", file, line)
 	}
+
+	// TODO: init peer
+
+	// TODO: make server
 
 	log.Info().Msg("initialized config; starting app")
 
