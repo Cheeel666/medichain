@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"medichain/config"
 	"medichain/internal/service"
@@ -13,6 +14,8 @@ import (
 const configPath = "config/config.json"
 
 func main() {
+	ctx := context.Background()
+
 	cfg, err := config.InitConfig(configPath)
 	if err != nil {
 		fmt.Println(err)
@@ -38,7 +41,14 @@ func main() {
 
 	log.Info().Msg("initialized service; starting peer")
 
-	svc.InitP2P(cfg)
+	// TODO: change returning value
+	_, err = svc.InitP2P(ctx, cfg)
+	if err != nil {
+		log.Fatal().Msg(fmt.Sprintf("failed to init peer listener:%v", err))
+	}
+
+	// TODO: connect BC
+
 	//
 	//bc := blockchain.NewBlockchain()
 	//

@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/binary"
 	"log"
+	"net"
 )
 
 func IntToHex(num int64) []byte {
@@ -14,4 +15,17 @@ func IntToHex(num int64) []byte {
 	}
 
 	return buff.Bytes()
+}
+
+func GetMyIP() string {
+	var MyIP string
+
+	conn, err := net.Dial("udp", "8.8.8.8:80")
+	if err != nil {
+		log.Fatalln(err)
+	} else {
+		localAddr := conn.LocalAddr().(*net.UDPAddr)
+		MyIP = localAddr.IP.String()
+	}
+	return MyIP
 }
