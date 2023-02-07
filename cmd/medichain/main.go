@@ -1,9 +1,10 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"medichain/config"
-	"medichain/internal/blockchain"
+	"medichain/internal/service"
 
 	"github.com/rs/zerolog"
 
@@ -13,6 +14,8 @@ import (
 const configPath = "config/config.json"
 
 func main() {
+	ctx := context.Background()
+
 	cfg, err := config.InitConfig(configPath)
 	if err != nil {
 		fmt.Println(err)
@@ -34,17 +37,24 @@ func main() {
 		return fmt.Sprintf(" %s:%d ", file, line)
 	}
 
-	// TODO: init peer
+	svc := service.NewService(cfg)
 
-	// TODO: make server
+	log.Info().Msg("initialized service; starting peer")
 
-	log.Info().Msg("initialized config; starting app")
+	// TODO: change returning value
+	_, err = svc.InitP2P(ctx, cfg)
+	if err != nil {
+		log.Fatal().Msg(fmt.Sprintf("failed to init peer listener:%v", err))
+	}
 
-	bc := blockchain.NewBlockchain()
+	// TODO: connect BC
 
-	bc.AddBlock("Test block")
-	bc.AddBlock("Test 1")
-	bc.AddBlock("Test 2")
-
-	bc.ValidateBlocks()
+	//
+	//bc := blockchain.NewBlockchain()
+	//
+	//bc.AddBlock("Test block")
+	//bc.AddBlock("Test 1")
+	//bc.AddBlock("Test 2")
+	//
+	//bc.ValidateBlocks()
 }

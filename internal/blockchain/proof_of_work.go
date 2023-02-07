@@ -1,13 +1,14 @@
 package blockchain
 
 import (
-	"8sem/diploma/medichain/internal/utils"
 	"bytes"
 	"crypto/sha256"
 	"fmt"
-	"github.com/rs/zerolog/log"
 	"math"
 	"math/big"
+	"medichain/internal/utils"
+
+	"github.com/rs/zerolog/log"
 )
 
 var (

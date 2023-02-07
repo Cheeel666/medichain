@@ -1,4 +1,7 @@
 {
   "db_host": "test",
-  "log_level": "debug"
+  "log_level": "debug",
+  "discovery_address": "127.0.0.1",
+  "discovery_port": ":51000",
+  "peer_listener_seed": 0
 }
