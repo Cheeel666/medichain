@@ -53,8 +53,10 @@ func main() {
 	cfg, err := config.InitConfig(configPath)
 	if err != nil {
 		log.Fatal(err)
+		return
 	}
 	r := newRouter()
+	log.Println("listening on port ", cfg.DiscoveryPort)
 	go func() {
 		if err := fasthttp.ListenAndServe(cfg.DiscoveryPort, r.Handler); err != nil && err != http.ErrServerClosed {
 			log.Fatal("call", "ListenAndServe")
@@ -73,22 +75,21 @@ func newRouter() *router.Router {
 	api := r.Group("/api/v1")
 	{
 		api.GET("/p2p_graph", getP2pGraph)
-		api.GET("/peers", getPeers)
+		api.GET("/request_port", requestPeer)
 		api.POST("/enroll_p2p", enrollP2p)
 	}
 
 	return r
 }
 
-func getPeers(ctx *fasthttp.RequestCtx) {
+func requestPeer(ctx *fasthttp.RequestCtx) {
 	log.Println("handleQuery() API called")
-	graphMutex.RLock()
-	defer graphMutex.RUnlock()
+	MaxPeerPort = MaxPeerPort + 1
 
-	newResponse(ctx, http.StatusOK, PeerGraph)
+	newResponse(ctx, http.StatusOK, MaxPeerPort)
 	if *verbose {
-		log.Println("PeerGraph = ", PeerGraph)
-		spew.Dump(PeerGraph)
+		log.Println("MaxPeerPort = ", MaxPeerPort)
+		spew.Dump(MaxPeerPort)
 	}
 }
 

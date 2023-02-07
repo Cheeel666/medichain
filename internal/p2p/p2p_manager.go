@@ -3,6 +3,7 @@ package p2p
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"log"
 	"medichain/config"
@@ -29,12 +30,9 @@ func InitP2P(cfg *config.Config) (*models.PeerProfile, error) {
 }
 
 func requestPort(discoveryAddress string) (*models.PeerProfile, error) { // Requesting PeerPort
-	var peerProfile *models.PeerProfile
+	peerProfile := &models.PeerProfile{}
 
-	peersReqAddr := discoveryAddress + "/peers"
-	log.Println("call requestPort", peersReqAddr)
-
-	response, err := http.Get(peersReqAddr)
+	response, err := http.Get(fmt.Sprintf("http://%s/api/v1/request_port", discoveryAddress))
 	if err != nil {
 		return nil, err
 	}
@@ -44,12 +42,12 @@ func requestPort(discoveryAddress string) (*models.PeerProfile, error) { // Requ
 	if err != nil {
 		return nil, err
 	}
-
+	fmt.Println(string(responseData))
 	err = json.Unmarshal(responseData, &peerProfile.PeerPort)
 	if err != nil {
 		return nil, err
 	}
 
-	log.Printf("Got response from peer discovery:%v", responseData)
+	log.Printf("Got response from peer discovery:%v", string(responseData))
 	return peerProfile, nil
 }
