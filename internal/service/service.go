@@ -24,7 +24,7 @@ func NewService(cfg *config.Config) *Services {
 	}
 }
 
-func (s *Services) InitP2P(cfg config.Config) (*models.PeerProfile, error) {
+func (s *Services) InitP2P(cfg *config.Config) (*models.PeerProfile, error) {
 	// request current Peer port
 	peer, err := s.Discovery.RequestPort()
 	if err != nil {

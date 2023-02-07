@@ -1,6 +1,7 @@
 package discovery
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -47,8 +48,8 @@ func (d *discoveryClient) RequestPort() (*models.PeerProfile, error) { // Reques
 	return peerProfile, nil
 }
 
+// RequestP2PGraph requests graph of p2p network
 func (d *discoveryClient) RequestP2PGraph() (*models.PeerGraph, error) {
-
 	peerGraph := &models.PeerGraph{
 		Graph: make(map[string]models.PeerProfile),
 		Mutex: &sync.RWMutex{},
@@ -72,4 +73,31 @@ func (d *discoveryClient) RequestP2PGraph() (*models.PeerGraph, error) {
 	}
 
 	return peerGraph, nil
+}
+
+// EnrollP2P adds peer to p2p network
+func (d *discoveryClient) EnrollP2P(profile models.PeerProfile) (*models.PeerProfile, error) {
+	peerProfile := &models.PeerProfile{}
+	body, err := json.Marshal(profile)
+	if err != nil {
+		return nil, err
+	}
+	url := fmt.Sprintf("http://%s/api/v1/enroll_p2p", d.address)
+	response, err := http.Post(url, "application/json", bytes.NewBuffer(body))
+	if err != nil {
+		return nil, err
+	}
+	defer response.Body.Close()
+
+	res, err := io.ReadAll(response.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	err = json.Unmarshal(res, peerProfile)
+	if err != nil {
+		return nil, err
+	}
+
+	return peerProfile, nil
 }
