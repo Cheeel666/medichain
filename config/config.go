@@ -10,6 +10,7 @@ type Config struct {
 	LogLevel         string `json:"log_level"`
 	DiscoveryAddress string `json:"discovery_address"`
 	DiscoveryPort    string `json:"discovery_port"`
+	PeerListenerSeed int64  `json:"peer_listener_seed"`
 }
 
 func InitConfig(path string) (*Config, error) {
