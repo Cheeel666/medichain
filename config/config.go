@@ -9,6 +9,7 @@ type Config struct {
 	DBHost           string `json:"db_host"`
 	LogLevel         string `json:"log_level"`
 	DiscoveryAddress string `json:"discovery_address"`
+	DiscoveryPort    string `json:"discovery_port"`
 }
 
 func InitConfig(path string) (*Config, error) {

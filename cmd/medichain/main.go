@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"medichain/config"
 	"medichain/internal/blockchain"
+	"medichain/internal/p2p"
 
 	"github.com/rs/zerolog"
 
@@ -34,10 +35,13 @@ func main() {
 		return fmt.Sprintf(" %s:%d ", file, line)
 	}
 
-	// TODO: init peer
+	// init peer
+	_, err = p2p.InitP2P(cfg)
+	if err != nil {
+		log.Fatal().Err(err).Msg("failed to init peer")
+	}
 
 	// TODO: make server
-
 	log.Info().Msg("initialized config; starting app")
 
 	bc := blockchain.NewBlockchain()

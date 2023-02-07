@@ -3,21 +3,21 @@ package main
 import (
 	"encoding/json"
 	"flag"
-	"github.com/davecgh/go-spew/spew"
-	"github.com/fasthttp/router"
-	"github.com/rs/zerolog"
-	"github.com/valyala/fasthttp"
 	"log"
+	"medichain/config"
 	"net/http"
 	"os"
 	"os/signal"
 	"sync"
 	"syscall"
+
+	"github.com/davecgh/go-spew/spew"
+	"github.com/fasthttp/router"
+	"github.com/rs/zerolog"
+	"github.com/valyala/fasthttp"
 )
 
-const (
-	listenPort = ":51000"
-)
+const configPath = "config/config.json"
 
 type Peer struct {
 	PeerAddress string `json:"PeerAddress"`
@@ -50,9 +50,13 @@ func init() {
 }
 
 func main() {
+	cfg, err := config.InitConfig(configPath)
+	if err != nil {
+		log.Fatal(err)
+	}
 	r := newRouter()
 	go func() {
-		if err := fasthttp.ListenAndServe(listenPort, r.Handler); err != nil && err != http.ErrServerClosed {
+		if err := fasthttp.ListenAndServe(cfg.DiscoveryPort, r.Handler); err != nil && err != http.ErrServerClosed {
 			log.Fatal("call", "ListenAndServe")
 		}
 	}()

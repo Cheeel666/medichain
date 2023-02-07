@@ -12,7 +12,7 @@ import (
 
 func InitP2P(cfg *config.Config) (*models.PeerProfile, error) {
 	// request current Peer port
-	peer, err := requestPort(cfg.DiscoveryAddress)
+	peer, err := requestPort(cfg.DiscoveryAddress + cfg.DiscoveryPort)
 	if err != nil {
 		return nil, err
 	}
