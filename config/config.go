@@ -11,6 +11,8 @@ type Config struct {
 	DiscoveryAddress string `json:"discovery_address"`
 	DiscoveryPort    string `json:"discovery_port"`
 	PeerListenerSeed int64  `json:"peer_listener_seed"`
+	BlockchainDir    string `json:"blockchain_dir"`
+	PeerPort         int
 }
 
 func InitConfig(path string) (*Config, error) {

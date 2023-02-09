@@ -7,9 +7,11 @@ import (
 	"io"
 	mrand "math/rand"
 	"medichain/config"
+	"medichain/internal/blockchain"
 	"medichain/internal/clients"
 	"medichain/internal/clients/discovery"
 	"medichain/internal/models"
+	"medichain/internal/p2p"
 	"medichain/internal/utils"
 
 	"github.com/libp2p/go-libp2p"
@@ -33,7 +35,7 @@ func NewService(cfg *config.Config) *Services {
 // TODO: create struct field for this
 
 // InitP2P - initialize p2p instance
-func (s *Services) InitP2P(ctx context.Context, cfg *config.Config) (*models.PeerProfile, error) {
+func (s *Services) InitP2P(ctx context.Context, bc blockchain.Blockchain, cfg *config.Config) (*models.PeerProfile, error) {
 	// request current Peer port
 	peer, err := s.Discovery.RequestPort()
 	if err != nil {
@@ -58,7 +60,10 @@ func (s *Services) InitP2P(ctx context.Context, cfg *config.Config) (*models.Pee
 	log.Info().Msg(fmt.Sprintf("initialized peer host: %v", peerHost))
 
 	// TODO: set stream: create handler
-	peerHost.BaseHost.SetStreamHandler()
+	cfg.PeerPort = peer.PeerPort
+	streamHandler := p2p.NewStreamHandler(peerHost, bc, cfg)
+	
+	peerHost.BaseHost.SetStreamHandler("/p2p/1.0.0", streamHandler.StreamHandler)
 	// TODO: connect p2p
 
 	// TODO: enroll p2p

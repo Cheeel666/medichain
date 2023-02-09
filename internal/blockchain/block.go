@@ -17,8 +17,8 @@ type Block struct {
 }
 
 // NewBlock ...
-func NewBlock(data string, prevBlockHash []byte) *Block {
-	block := &Block{
+func NewBlock(data string, prevBlockHash []byte) Block {
+	block := Block{
 		Timestamp:     time.Now().Unix(),
 		Data:          []byte(data),
 		PrevBlockHash: prevBlockHash,
@@ -44,6 +44,6 @@ func (b *Block) SetHash() {
 }
 
 // NewGenesisBlock - create genesis block
-func NewGenesisBlock() *Block {
+func NewGenesisBlock() Block {
 	return NewBlock("Genesis Block", []byte{})
 }
