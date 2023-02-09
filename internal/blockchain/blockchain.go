@@ -2,8 +2,9 @@ package blockchain
 
 import (
 	"fmt"
-	"github.com/rs/zerolog/log"
 	"strconv"
+
+	"github.com/rs/zerolog/log"
 )
 
 // Blockchain keeps a sequence of Blocks
@@ -31,4 +32,12 @@ func (bc *Blockchain) ValidateBlocks() {
 		pow := NewProofOfWork(block)
 		log.Info().Msg(fmt.Sprintf("PoW: %s\n", strconv.FormatBool(pow.Validate())))
 	}
+}
+
+func (bc *Blockchain) Length() int {
+	return len(bc.blocks)
+}
+
+func (bc *Blockchain) UpdateBc(blocks []*Block) {
+	bc.blocks = blocks
 }

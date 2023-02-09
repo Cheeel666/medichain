@@ -58,8 +58,7 @@ func (s *Services) InitP2P(ctx context.Context, cfg *config.Config) (*models.Pee
 	log.Info().Msg(fmt.Sprintf("initialized peer host: %v", peerHost))
 
 	// TODO: set stream: create handler
-	//peerHost.BaseHost.SetStreamHandler()
-
+	peerHost.BaseHost.SetStreamHandler()
 	// TODO: connect p2p
 
 	// TODO: enroll p2p
