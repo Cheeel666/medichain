@@ -1,10 +1,12 @@
-package utils
+package main
 
 import (
 	"bytes"
 	"encoding/binary"
 	"log"
+	"math/rand"
 	"net"
+	"time"
 )
 
 func IntToHex(num int64) []byte {
@@ -28,4 +30,11 @@ func GetMyIP() string {
 		MyIP = localAddr.IP.String()
 	}
 	return MyIP
+}
+
+func genRandInt(n int) int {
+	myRandSource := rand.NewSource(time.Now().UnixNano())
+	myRand := rand.New(myRandSource)
+	val := myRand.Intn(n)
+	return val
 }

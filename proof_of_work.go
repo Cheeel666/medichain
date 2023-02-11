@@ -1,14 +1,12 @@
-package blockchain
+package main
 
 import (
 	"bytes"
 	"crypto/sha256"
 	"fmt"
+	"github.com/rs/zerolog/log"
 	"math"
 	"math/big"
-	"medichain/internal/utils"
-
-	"github.com/rs/zerolog/log"
 )
 
 var (
@@ -38,9 +36,9 @@ func (pow *ProofOfWork) prepareData(nonce int) []byte {
 		[][]byte{
 			pow.block.PrevBlockHash,
 			pow.block.Data,
-			utils.IntToHex(pow.block.Timestamp),
-			utils.IntToHex(int64(targetBits)),
-			utils.IntToHex(int64(nonce)),
+			IntToHex(pow.block.Timestamp),
+			IntToHex(int64(targetBits)),
+			IntToHex(int64(nonce)),
 		},
 		[]byte{},
 	)

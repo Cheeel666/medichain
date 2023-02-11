@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"flag"
 	"log"
-	"medichain/config"
 	"net/http"
 	"os"
 	"os/signal"
@@ -18,6 +17,8 @@ import (
 )
 
 const configPath = "config/config.json"
+
+const discoveryPort = "51000"
 
 type Peer struct {
 	PeerAddress string `json:"PeerAddress"`
@@ -50,15 +51,10 @@ func init() {
 }
 
 func main() {
-	cfg, err := config.InitConfig(configPath)
-	if err != nil {
-		log.Fatal(err)
-		return
-	}
 	r := newRouter()
-	log.Println("listening on port ", cfg.DiscoveryPort)
+	log.Println("listening on port ", discoveryPort)
 	go func() {
-		if err := fasthttp.ListenAndServe(cfg.DiscoveryPort, r.Handler); err != nil && err != http.ErrServerClosed {
+		if err := fasthttp.ListenAndServe(discoveryPort, r.Handler); err != nil && err != http.ErrServerClosed {
 			log.Fatal("call", "ListenAndServe")
 		}
 	}()

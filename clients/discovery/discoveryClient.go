@@ -6,8 +6,9 @@ import (
 	"fmt"
 	"io"
 	"medichain/config"
-	"medichain/internal/clients"
-	"medichain/internal/models"
+
+	"medichain/clients"
+	"medichain/models"
 	"net/http"
 	"sync"
 

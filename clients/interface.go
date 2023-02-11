@@ -1,6 +1,8 @@
 package clients
 
-import "medichain/internal/models"
+import (
+	"medichain/models"
+)
 
 type DiscoveryClient interface {
 	RequestPort() (*models.PeerProfile, error)
