@@ -32,13 +32,14 @@ func main() {
 	zerolog.CallerMarshalFunc = func(pc uintptr, file string, line int) string {
 		return fmt.Sprintf(" %s:%d ", file, line)
 	}
+	log.Info().Msg(fmt.Sprintf("Parsed config: %v", cfg))
 
 	svc := NewService(cfg)
 
 	log.Info().Msg("initialized service; starting peer")
 
 	// TODO: change returning value
-	_, err = svc.InitP2P(cfg)
+	err = InitP2P(cfg, svc)
 	if err != nil {
 		log.Fatal().Msg(fmt.Sprintf("failed to init peer listener:%v", err))
 	}

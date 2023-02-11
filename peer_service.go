@@ -8,11 +8,11 @@ import (
 	"github.com/davecgh/go-spew/spew"
 	"github.com/libp2p/go-libp2p"
 	"github.com/libp2p/go-libp2p-core/peer"
-	crypto "github.com/libp2p/go-libp2p/core/crypto"
+	"github.com/libp2p/go-libp2p/core/crypto"
 	peer2 "github.com/libp2p/go-libp2p/core/peer"
 	pstore "github.com/libp2p/go-libp2p/core/peerstore"
 	ma "github.com/multiformats/go-multiaddr"
-	multiaddr "github.com/multiformats/go-multiaddr"
+
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog/log"
 	"io"
@@ -34,25 +34,25 @@ var (
 	PeerHost    *models.PeerHost
 )
 
-type Services struct {
+type Service struct {
 	Discovery clients.DiscoveryClient
 }
 
-func NewService(cfg *config.Config) *Services {
-	return &Services{
+func NewService(cfg *config.Config) *Service {
+	return &Service{
 		Discovery: discovery.NewDiscoveryClient(cfg),
 	}
 }
 
 // InitP2P - initialize p2p instance
-func (s *Services) InitP2P(cfg *config.Config) error {
+func InitP2P(cfg *config.Config, s *Service) error {
 	// request current Peer port
-	peer, err := s.Discovery.RequestPort()
+	p, err := s.Discovery.RequestPort()
 	if err != nil {
 		return err
 	}
 
-	if peer.PeerPort == 0 {
+	if p.PeerPort == 0 {
 		return errors.New("failed to get peer port from discovery")
 	}
 
@@ -63,14 +63,14 @@ func (s *Services) InitP2P(cfg *config.Config) error {
 	}
 	log.Info().Msg(fmt.Sprintf("requested p2p graph: %v", PeerGraph))
 
-	PeerHost, err = makeHost(peer.PeerPort, cfg.PeerListenerSeed)
+	PeerHost, err = makeHost(p.PeerPort, cfg.PeerListenerSeed)
 	if err != nil {
 		return err
 	}
 	log.Info().Msg(fmt.Sprintf("initialized peer host: %v", PeerHost))
 
 	// TODO: set stream: create handler
-	cfg.PeerPort = peer.PeerPort
+	cfg.PeerPort = p.PeerPort
 
 	PeerHost.BaseHost.SetStreamHandler("/p2p/1.0.0", handleStream)
 
@@ -106,7 +106,7 @@ func makeHost(port int, seed int64) (*models.PeerHost, error) {
 
 	log.Info().Msg(fmt.Sprintf("created host %v with id %v(%v)", baseHost, baseHost.ID(), baseHost.ID().String()))
 
-	multiAddress, err := multiaddr.NewMultiaddr(fmt.Sprintf("/ipfs/%s", baseHost.ID().String()))
+	multiAddress, err := ma.NewMultiaddr(fmt.Sprintf("/ipfs/%s", baseHost.ID().String()))
 	if err != nil {
 		return nil, err
 	}

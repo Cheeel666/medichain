@@ -5,9 +5,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"medichain/config"
-
 	"medichain/clients"
+	"medichain/config"
 	"medichain/models"
 	"net/http"
 	"sync"
@@ -45,7 +44,7 @@ func (d *discoveryClient) RequestPort() (*models.PeerProfile, error) { // Reques
 		return nil, err
 	}
 
-	log.Printf("Got response from peer discovery:%v", string(responseData))
+	log.Printf("Got response from peer discovery:%v", peerProfile.PeerPort)
 	return peerProfile, nil
 }
 
@@ -66,6 +65,7 @@ func (d *discoveryClient) RequestP2PGraph() (*models.PeerGraph, error) {
 		return nil, err
 	}
 
+	fmt.Println(string(responseData))
 	peerGraph.Mutex.Lock()
 	defer peerGraph.Mutex.Unlock()
 	err = json.Unmarshal(responseData, peerGraph)

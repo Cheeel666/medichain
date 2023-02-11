@@ -18,7 +18,7 @@ import (
 
 const configPath = "config/config.json"
 
-const discoveryPort = "51000"
+const discoveryPort = ":51000"
 
 type Peer struct {
 	PeerAddress string `json:"PeerAddress"`
@@ -55,7 +55,7 @@ func main() {
 	log.Println("listening on port ", discoveryPort)
 	go func() {
 		if err := fasthttp.ListenAndServe(discoveryPort, r.Handler); err != nil && err != http.ErrServerClosed {
-			log.Fatal("call", "ListenAndServe")
+			log.Fatalf("call %s result: %v", "ListenAndServe", err)
 		}
 	}()
 
@@ -82,7 +82,17 @@ func requestPeer(ctx *fasthttp.RequestCtx) {
 	log.Println("handleQuery() API called")
 	MaxPeerPort = MaxPeerPort + 1
 
-	newResponse(ctx, http.StatusOK, MaxPeerPort)
+	resp, err := json.Marshal(MaxPeerPort)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	strContentType := []byte("Content-Type")
+	strApplicationJSON := []byte("application/json")
+	ctx.Response.Header.SetCanonical(strContentType, strApplicationJSON)
+	ctx.Response.SetStatusCode(http.StatusOK)
+
+	ctx.Response.SetBody(resp)
 	if *verbose {
 		log.Println("MaxPeerPort = ", MaxPeerPort)
 		spew.Dump(MaxPeerPort)
@@ -117,7 +127,13 @@ func getP2pGraph(ctx *fasthttp.RequestCtx) {
 		return
 	}
 
-	newResponse(ctx, http.StatusOK, string(bytes))
+	strContentType := []byte("Content-Type")
+	strApplicationJSON := []byte("application/json")
+	ctx.Response.Header.SetCanonical(strContentType, strApplicationJSON)
+	ctx.Response.SetStatusCode(http.StatusOK)
+
+	ctx.Response.SetBody(bytes)
+	
 	if *verbose {
 		log.Println("PeerGraph = ", PeerGraph)
 		spew.Dump(PeerGraph)
